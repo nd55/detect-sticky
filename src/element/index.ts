@@ -1,14 +1,6 @@
 const customSheet = new CSSStyleSheet()
 customSheet.replaceSync(`:host{display: contents;}`)
 
-/**
- * TODO:
- * - react to changes in the top value of the sticky element, e.g via media query or clamp function
- * - detect viewport changes
- * - also for left, right, bottom values
- * - document :state(stuck) vs :--stuck vs [stuck]
- */
-
 class DetectSticky extends HTMLElement {
   private _internals: ElementInternals
   private observer: IntersectionObserver
@@ -24,6 +16,7 @@ class DetectSticky extends HTMLElement {
     shadow.appendChild(document.createElement("slot"))
 
     this.observer
+    this.childElement = this.children[0]
   }
 
   get stuck() {
@@ -39,6 +32,8 @@ class DetectSticky extends HTMLElement {
       if (this.attributes.getNamedItem("stuck"))
         this.attributes.removeNamedItem("stuck")
     }
+
+    this.childElement.toggleAttribute("data-stuck", value)
   }
 
   connectedCallback() {
